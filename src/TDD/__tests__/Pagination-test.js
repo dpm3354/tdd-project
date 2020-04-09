@@ -27,18 +27,84 @@ describe('<Pagination />', () => {
 
   const factory = props => shallow(<Pagination {...props} />)
 
-  // Replace this with your tests
-  describe('example of a test', () => {
-    it('renders a link', () => {
+  describe('with no label', () => {
+    it('renders nothing', () => {
+      // Create props list with nextUrl and previousUrl, but no label
       const props = {
         ...defaultProps,
-        label: 'Override label',
+        label: null,
       }
       const wrapper = factory(props)
-      const link = wrapper.find('a')
+      expect(wrapper.equals(null)).toBe(true)
+    })
+  })
 
-      expect(link.length).toEqual(1)
-      expect(link.prop('href')).toEqual('#')
+  describe('with just a label prop', () => {
+    const wrapper = factory({ label: defaultProps.label })
+
+    it('renders the label', () => {
+      expect(wrapper.find('span').text()).toEqual(defaultProps.label)
+    })
+    it('does not render links', () => {
+      expect(wrapper.find('a').length).toBe(0)
+    })
+  })
+
+  describe('with label and nextUrl prop', () => {
+    const wrapper = factory({label: defaultProps.label, nextUrl: defaultProps.nextUrl})
+    const next = wrapper.find('[data-tid="next"]')
+
+    it('renders the label', () => {
+      expect(wrapper.find('span').text()).toEqual(defaultProps.label)
+    })
+    it('renders the next link', () => {
+      expect(next.exists()).toBe(true)
+    })
+    it('passes the nextUrl value to the link', () => {
+      expect(next.prop('href')).toEqual(defaultProps.nextUrl)
+    })
+    it('does not render the previous link', () => {
+      expect(wrapper.find('[data-tid="previous"]').exists()).toBe(false)
+    })
+  })
+
+  describe('with label and previousUrl prop', () => {
+    const wrapper = factory({label: defaultProps.label, previousUrl: defaultProps.previousUrl})
+    const previous = wrapper.find('[data-tid="previous"]')
+
+    it('renders the label', () => {
+      expect(wrapper.find('span').text()).toEqual(defaultProps.label)
+    })
+    it('renders the previous link', () => {
+      expect(previous.exists()).toBe(true)
+    })
+    it('passes the previousUrl value to the link', () => {
+      expect(previous.prop('href')).toEqual(defaultProps.previousUrl)
+    })
+    it('does not render the next link', () => {
+      expect(wrapper.find('[data-tid="next"]').exists()).toBe(false)
+    })
+  })
+
+  describe('with label, nextUrl, and previousUrl prop', () => {
+    const wrapper = factory(defaultProps)
+    const next = wrapper.find('[data-tid="next"]')
+    const previous = wrapper.find('[data-tid="previous"]')
+
+    it('renders the label', () => {
+      expect(wrapper.find('span').text()).toEqual(defaultProps.label)
+    })
+    it('renders the previous link', () => {
+      expect(previous.exists()).toBe(true)
+    })
+    it('passes the previousUrl value to the link', () => {
+      expect(previous.prop('href')).toEqual(defaultProps.previousUrl)
+    })
+    it('renders the next link', () => {
+      expect(next.exists()).toBe(true)
+    })
+    it('passes the nextUrl value to the link', () => {
+      expect(next.prop('href')).toEqual(defaultProps.nextUrl)
     })
   })
 })
